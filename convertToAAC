@@ -1,0 +1,14 @@
+#!/bin/sh
+
+outputPath=~/Desktop/musicoutput;
+sourcePath=~/Desktop/musics;
+
+for file in $sourcePath/*; do
+    fileName=$(basename ${file});
+    filenameNoExt=$(echo $fileName | cut -f 1 -d '.');
+    outputFile="${outputPath}/${filenameNoExt}.aac";
+    echo $fileName;
+    echo $outputFile;
+    ffmpeg -i $file  -b:a 24K $outputFile;
+    test $? -gt 128 && break;
+done

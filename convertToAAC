@@ -5,7 +5,7 @@ sourcePath=~/Desktop/musics;
 
 for file in $sourcePath/*; do
     fileName=$(basename ${file});
-    filenameNoExt=$(echo $fileName | cut -f 1 -d '.');
+    filenameNoExt=$(echo $fileName | cut -f 1 -d '.' | cut -d '】' -f 2-);
     outputFile="${outputPath}/${filenameNoExt}.aac";
     echo $fileName;
     echo $outputFile;

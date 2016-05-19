@@ -12,3 +12,34 @@ for file in $sourcePath/*; do
     ffmpeg -i $file  -b:a 24K $outputFile;
     test $? -gt 128 && break;
 done
+
+
+
+
+
+
+
+
+#!/bin/sh
+
+sourcePath=~/Desktop/MusicAssets;
+outputPath=~/Desktop/MusicOutput;
+
+rm -rf ${outputPath};
+mkdir -p ${outputPath};
+
+for folder in $sourcePath/*; do
+	echo $folder
+	folderName=$(basename ${folder});
+	outputFolder=${outputPath}/${folderName};
+	mkdir ${outputFolder};
+	for file in ${folder}/*; do
+	    fileName=$(basename ${file});
+	    filenameNoExt=$(echo $fileName | cut -f 1 -d '.' | cut -d '】' -f 2-);
+	    outputFile="${outputFolder}/${filenameNoExt}.aac";
+	    echo $fileName;
+	    echo $outputFile;
+	    ffmpeg -i $file -b:a 48K $outputFile;
+	    test $? -gt 128 && break;
+	done
+done

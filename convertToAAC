@@ -43,3 +43,26 @@ for folder in $sourcePath/*; do
 	    test $? -gt 128 && break;
 	done
 done
+
+
+
+
+#!/bin/bash
+exec 3<"$1"
+folder=$2
+rm -rf $folder
+mkdir -p $folder
+while IFS='' read -r -u 3 line || [[ -n "$line" ]]; do
+	echo $line
+	name=$(echo $line | cut -f 3 -d '|')
+	url=$(echo $line | cut -f 2 -d '|')
+	category=$(echo $line | cut -f 4 -d '|')
+	echo "name=${name} url=${url} category=${category}"
+	outputFile=${2}/${name//[[:blank:]]/}_${category//[[:blank:]]/}.aac
+	# echo ${name}=${url}
+	# echo $outputFile
+	ffmpeg -i ${url} -b:a 24K $outputFile
+	test $? -gt 128 && break;
+
+    # read -p "> $line (Press Enter to continue)"
+done

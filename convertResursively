@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function is_supported_media_file {
+	case "$(echo $1 | rev | cut -f 1 -d '.' | rev)" in 
+		"m4a" | "mp3") return 0
+		;;
+		*)
+		return 1
+		;;
+	esac
+}
+
+function convert {
+	echo "converting '$1'"
+    filenameNoExt=$(echo "$1" | cut -f 1,2 -d '.')
+	outputFileName="${filenameNoExt}.PCM"
+	ffmpeg -i "${1}" -f s16le -acodec pcm_s16le -ac 1 "${outputFileName}"
+}
+
+function convert_directory {
+	for i in "$1"/*; do
+	    test $? -gt 128 && break;
+		if [[ -d "$i" ]]; then
+			convert_directory "$i"
+		elif is_supported_media_file "$i"; then
+			convert "$i"
+		fi
+	done
+}
+
+echo "input top level directory"
+# echo "$HOME"
+read sourcePath
+path=${sourcePath/#\~/$HOME}
+convert_directory ${path%/}
